@@ -7,8 +7,9 @@
 export interface ImageGenerationRequest {
   prompt: string;
   inputImage?: string;
+  inputImages?: string[];
   outputCount?: number;
-  mode: 'generate' | 'edit' | 'restore';
+  mode: 'generate' | 'edit' | 'restore' | 'remix';
   // Batch generation options
   styles?: string[];
   variations?: string[];

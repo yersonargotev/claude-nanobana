@@ -4,7 +4,6 @@
  * @license
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
- * Adapted for Claude Code plugin compatibility
  */
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
@@ -21,7 +20,7 @@ import {
   DiagramPromptArgs,
 } from './types.js';
 
-class ClaudeNanoBananaServer {
+class NanoBananaServer {
   private server: Server;
   private imageGenerator!: ImageGenerator;
   private initializationError: Error | null = null;
@@ -29,7 +28,7 @@ class ClaudeNanoBananaServer {
   constructor() {
     this.server = new Server(
       {
-        name: 'claude-nanobanana-server',
+        name: 'nanobanana-server',
         version: '1.0.0',
       },
       {
@@ -45,11 +44,9 @@ class ClaudeNanoBananaServer {
     try {
       const authConfig = ImageGenerator.validateAuthentication();
       this.imageGenerator = new ImageGenerator(authConfig);
-      console.error('[Claude Nano Banana] MCP server initialized successfully');
     } catch (error: unknown) {
       this.initializationError =
         error instanceof Error ? error : new Error(String(error));
-      console.error('[Claude Nano Banana] Initialization failed:', this.initializationError.message);
     }
   }
 
@@ -157,6 +154,31 @@ class ClaudeNanoBananaServer {
                 },
               },
               required: ['prompt', 'file'],
+            },
+          },
+          {
+            name: 'remix_image',
+            description: 'Remix multiple images into a new one based on a text prompt',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                prompt: {
+                  type: 'string',
+                  description: 'The text prompt describing the new image',
+                },
+                files: {
+                  type: 'array',
+                  items: { type: 'string' },
+                  description: 'Array of filenames of the input images to remix',
+                },
+                preview: {
+                  type: 'boolean',
+                  description:
+                    'Automatically open generated images in default viewer',
+                  default: false,
+                },
+              },
+              required: ['prompt', 'files'],
             },
           },
           {
@@ -413,8 +435,6 @@ class ClaudeNanoBananaServer {
       try {
         let response;
 
-        console.error(`[Claude Nano Banana] Executing tool: ${name}`);
-
         switch (name) {
           case 'generate_image': {
             const imageRequest: ImageGenerationRequest = {
@@ -460,6 +480,20 @@ class ClaudeNanoBananaServer {
                 (args?.['no-preview'] as boolean),
             };
             response = await this.imageGenerator.editImage(restoreRequest);
+            break;
+          }
+
+          case 'remix_image': {
+            const remixRequest: ImageGenerationRequest = {
+              prompt: args?.prompt as string,
+              inputImages: args?.files as string[],
+              mode: 'remix',
+              preview: args?.preview as boolean,
+              noPreview:
+                (args?.noPreview as boolean) ||
+                (args?.['no-preview'] as boolean),
+            };
+            response = await this.imageGenerator.remixImage(remixRequest);
             break;
           }
 
@@ -531,14 +565,12 @@ class ClaudeNanoBananaServer {
             throw new Error(`Unknown tool: ${name}`);
         }
 
-        console.error(`[Claude Nano Banana] Tool ${name} completed successfully`);
-
         if (response.success) {
           return {
             content: [
               {
                 type: 'text',
-                text: `${response.message}\n\nGenerated files:\n${response.generatedFiles?.map((f) => `• ${f}`).join('\n') || 'None'}`,
+                text: `${response.message}\n\nGenerated files:\n${response.generatedFiles?.map((f) => `• ${f}`).join('\n') || 'None'}`, 
               },
             ],
           };
@@ -546,7 +578,7 @@ class ClaudeNanoBananaServer {
           throw new Error(response.error || response.message);
         }
       } catch (error: unknown) {
-        console.error(`[Claude Nano Banana] Error executing tool ${name}:`, error);
+        console.error(`Error executing tool ${name}:`, error);
         if (error instanceof Error) {
           throw error;
         }
@@ -615,33 +647,24 @@ class ClaudeNanoBananaServer {
 
   private setupErrorHandling() {
     this.server.onerror = (error) => {
-      console.error('[Claude Nano Banana MCP Error]', error);
+      console.error('[MCP Error]', error);
     };
 
     process.on('SIGINT', async () => {
-      console.error('[Claude Nano Banana] Shutting down MCP server...');
       await this.server.close();
       process.exit(0);
-    });
-
-    process.on('uncaughtException', (error) => {
-      console.error('[Claude Nano Banana] Uncaught exception:', error);
-    });
-
-    process.on('unhandledRejection', (reason, promise) => {
-      console.error('[Claude Nano Banana] Unhandled rejection at:', promise, 'reason:', reason);
     });
   }
 
   async run() {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error('[Claude Nano Banana] MCP server running on stdio');
+    console.error('Nano Banana MCP server running on stdio');
   }
 }
 
-const server = new ClaudeNanoBananaServer();
+const server = new NanoBananaServer();
 server.run().catch((error) => {
-  console.error('[Claude Nano Banana] Failed to start server:', error);
+  console.error('Failed to start server:', error);
   process.exit(1);
 });

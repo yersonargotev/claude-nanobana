@@ -2,7 +2,6 @@
  * @license
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
- * Adapted for Claude Code plugin compatibility
  */
 
 import { GoogleGenAI } from '@google/genai';
@@ -29,7 +28,7 @@ export class ImageGenerator {
     });
     this.modelName =
       process.env.NANOBANANA_MODEL || ImageGenerator.DEFAULT_MODEL;
-    console.error(`[Nano Banana] Using image model: ${this.modelName}`);
+    console.error(`DEBUG - Using image model: ${this.modelName}`);
   }
 
   private async openImagePreview(filePath: string): Promise<void> {
@@ -50,10 +49,10 @@ export class ImageGenerator {
       }
 
       await execAsync(command);
-      console.error(`[Nano Banana] Opened preview for: ${filePath}`);
+      console.error(`DEBUG - Opened preview for: ${filePath}`);
     } catch (error: unknown) {
       console.error(
-        `[Nano Banana] Failed to open preview for ${filePath}:`,
+        `DEBUG - Failed to open preview for ${filePath}:`,
         error instanceof Error ? error.message : String(error),
       );
       // Don't throw - preview failure shouldn't break image generation
@@ -84,14 +83,14 @@ export class ImageGenerator {
     if (!shouldPreview || !files.length) {
       if (files.length > 1 && request.noPreview) {
         console.error(
-          `[Nano Banana] Auto-preview disabled for ${files.length} images (--no-preview specified)`,
+          `DEBUG - Auto-preview disabled for ${files.length} images (--no-preview specified)`,
         );
       }
       return;
     }
 
     console.error(
-      `[Nano Banana] ${request.preview ? 'Explicit' : 'Auto'}-opening ${files.length} image(s) for preview`,
+      `DEBUG - ${request.preview ? 'Explicit' : 'Auto'}-opening ${files.length} image(s) for preview`,
     );
 
     // Open all generated images
@@ -102,20 +101,20 @@ export class ImageGenerator {
   static validateAuthentication(): AuthConfig {
     const nanoGeminiKey = process.env.NANOBANANA_GEMINI_API_KEY;
     if (nanoGeminiKey) {
-      console.error('[Nano Banana] ✓ Found NANOBANANA_GEMINI_API_KEY environment variable');
+      console.error('✓ Found NANOBANANA_GEMINI_API_KEY environment variable');
       return { apiKey: nanoGeminiKey, keyType: 'GEMINI_API_KEY' };
     }
 
     const nanoGoogleKey = process.env.NANOBANANA_GOOGLE_API_KEY;
     if (nanoGoogleKey) {
-      console.error('[Nano Banana] ✓ Found NANOBANANA_GOOGLE_API_KEY environment variable');
+      console.error('✓ Found NANOBANANA_GOOGLE_API_KEY environment variable');
       return { apiKey: nanoGoogleKey, keyType: 'GOOGLE_API_KEY' };
     }
 
     const geminiKey = process.env.GEMINI_API_KEY;
     if (geminiKey) {
       console.error(
-        '[Nano Banana] ✓ Found GEMINI_API_KEY environment variable (fallback)',
+        '✓ Found GEMINI_API_KEY environment variable (fallback)',
       );
       return { apiKey: geminiKey, keyType: 'GEMINI_API_KEY' };
     }
@@ -123,13 +122,13 @@ export class ImageGenerator {
     const googleKey = process.env.GOOGLE_API_KEY;
     if (googleKey) {
       console.error(
-        '[Nano Banana] ✓ Found GOOGLE_API_KEY environment variable (fallback)',
+        '✓ Found GOOGLE_API_KEY environment variable (fallback)',
       );
       return { apiKey: googleKey, keyType: 'GOOGLE_API_KEY' };
     }
 
     throw new Error(
-      '[Nano Banana] ERROR: No valid API key found. Please set NANOBANANA_GEMINI_API_KEY, NANOBANANA_GOOGLE_API_KEY, GEMINI_API_KEY, or GOOGLE_API_KEY environment variable.\n' +
+      'ERROR: No valid API key found. Please set NANOBANANA_GEMINI_API_KEY, NANOBANANA_GOOGLE_API_KEY, GEMINI_API_KEY, or GOOGLE_API_KEY environment variable.\n' +
         'For more details on authentication, visit: https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/authentication.md',
     );
   }
@@ -149,7 +148,7 @@ export class ImageGenerator {
     // Additional check: base64 image data is typically quite long
     if (data.length < 1000) {
       console.error(
-        '[Nano Banana] Skipping short data that may not be image:',
+        'DEBUG - Skipping short data that may not be image:',
         data.length,
         'characters',
       );
@@ -247,12 +246,12 @@ export class ImageGenerator {
       const prompts = this.buildBatchPrompts(request);
       let firstError: string | null = null;
 
-      console.error(`[Nano Banana] Generating ${prompts.length} image variation(s)`);
+      console.error(`DEBUG - Generating ${prompts.length} image variation(s)`);
 
       for (let i = 0; i < prompts.length; i++) {
         const currentPrompt = prompts[i];
         console.error(
-          `[Nano Banana] Generating variation ${i + 1}/${prompts.length}:`,
+          `DEBUG - Generating variation ${i + 1}/${prompts.length}:`,
           currentPrompt,
         );
 
@@ -268,7 +267,7 @@ export class ImageGenerator {
             ],
           });
 
-          console.error(`[Nano Banana] API Response structure for variation ${i + 1}`);
+          console.error('DEBUG - API Response structure for variation', i + 1);
 
           if (response.candidates && response.candidates[0]?.content?.parts) {
             // Process image parts in the response
@@ -277,14 +276,14 @@ export class ImageGenerator {
 
               if (part.inlineData?.data) {
                 imageBase64 = part.inlineData.data;
-                console.error('[Nano Banana] Found image data in inlineData:', {
+                console.error('DEBUG - Found image data in inlineData:', {
                   length: imageBase64.length,
                   mimeType: part.inlineData.mimeType,
                 });
               } else if (part.text && this.isValidBase64ImageData(part.text)) {
                 imageBase64 = part.text;
                 console.error(
-                  '[Nano Banana] Found image data in text field (fallback)',
+                  'DEBUG - Found image data in text field (fallback)',
                 );
               }
 
@@ -302,7 +301,7 @@ export class ImageGenerator {
                   filename,
                 );
                 generatedFiles.push(fullPath);
-                console.error('[Nano Banana] Image saved to:', fullPath);
+                console.error('DEBUG - Image saved to:', fullPath);
                 break; // Only process first valid image per variation
               }
             }
@@ -313,7 +312,7 @@ export class ImageGenerator {
             firstError = errorMessage;
           }
           console.error(
-            `[Nano Banana] Error generating variation ${i + 1}:`,
+            `DEBUG - Error generating variation ${i + 1}:`,
             errorMessage,
           );
 
@@ -345,7 +344,7 @@ export class ImageGenerator {
         generatedFiles,
       };
     } catch (error: unknown) {
-      console.error('[Nano Banana] Error in generateTextToImage:', error);
+      console.error('DEBUG - Error in generateTextToImage:', error);
       return {
         success: false,
         message: 'Failed to generate image',
@@ -400,148 +399,147 @@ export class ImageGenerator {
     return `An unexpected error occurred: ${errorMessage}`;
   }
 
-  async generateStorySequence(
-    request: ImageGenerationRequest,
-    args?: StorySequenceArgs,
-  ): Promise<ImageGenerationResponse> {
-    try {
-      const outputPath = FileHandler.ensureOutputDirectory();
-      const generatedFiles: string[] = [];
-      const steps = request.outputCount || 4;
-      const type = args?.type || 'story';
-      const style = args?.style || 'consistent';
-      const transition = args?.transition || 'smooth';
-      let firstError: string | null = null;
-
-      console.error(`[Nano Banana] Generating ${steps}-step ${type} sequence`);
-
-      // Generate each step of the story/process
-      for (let i = 0; i < steps; i++) {
-        const stepNumber = i + 1;
-        let stepPrompt = `${request.prompt}, step ${stepNumber} of ${steps}`;
-
-        // Add context based on type
-        switch (type) {
-          case 'story':
-            stepPrompt += `, narrative sequence, ${style} art style`;
-            break;
-          case 'process':
-            stepPrompt += `, procedural step, instructional illustration`;
-            break;
-          case 'tutorial':
-            stepPrompt += `, tutorial step, educational diagram`;
-            break;
-          case 'timeline':
-            stepPrompt += `, chronological progression, timeline visualization`;
-            break;
-        }
-
-        // Add transition context
-        if (i > 0) {
-          stepPrompt += `, ${transition} transition from previous step`;
-        }
-
-        console.error(`[Nano Banana] Generating step ${stepNumber}: ${stepPrompt}`);
-
-        try {
-          const response = await this.ai.models.generateContent({
-            model: this.modelName,
-            contents: [
-              {
-                role: 'user',
-                parts: [{ text: stepPrompt }],
-              },
-            ],
-          });
-
-          if (response.candidates && response.candidates[0]?.content?.parts) {
-            for (const part of response.candidates[0].content.parts) {
-              let imageBase64: string | undefined;
-
-              if (part.inlineData?.data) {
-                imageBase64 = part.inlineData.data;
-              } else if (part.text && this.isValidBase64ImageData(part.text)) {
-                imageBase64 = part.text;
-              }
-
-              if (imageBase64) {
-                const filename = FileHandler.generateFilename(
-                  `${type}step${stepNumber}${request.prompt}`,
-                  'png', // Stories default to png
-                  0,
-                );
-                const fullPath = await FileHandler.saveImageFromBase64(
-                  imageBase64,
-                  outputPath,
-                  filename,
-                );
-                generatedFiles.push(fullPath);
-                console.error(`[Nano Banana] Step ${stepNumber} saved to:`, fullPath);
-                break;
+    async generateStorySequence(
+      request: ImageGenerationRequest,
+      args?: StorySequenceArgs,
+    ): Promise<ImageGenerationResponse> {
+      try {
+        const outputPath = FileHandler.ensureOutputDirectory();
+        const generatedFiles: string[] = [];
+        const steps = request.outputCount || 4;
+        const type = args?.type || 'story';
+        const style = args?.style || 'consistent';
+        const transition = args?.transition || 'smooth';
+        let firstError: string | null = null;
+  
+        console.error(`DEBUG - Generating ${steps}-step ${type} sequence`);
+  
+        // Generate each step of the story/process
+        for (let i = 0; i < steps; i++) {
+          const stepNumber = i + 1;
+          let stepPrompt = `${request.prompt}, step ${stepNumber} of ${steps}`;
+  
+          // Add context based on type
+          switch (type) {
+            case 'story':
+              stepPrompt += `, narrative sequence, ${style} art style`;
+              break;
+            case 'process':
+              stepPrompt += `, procedural step, instructional illustration`;
+              break;
+            case 'tutorial':
+              stepPrompt += `, tutorial step, educational diagram`;
+              break;
+            case 'timeline':
+              stepPrompt += `, chronological progression, timeline visualization`;
+              break;
+          }
+  
+          // Add transition context
+          if (i > 0) {
+            stepPrompt += `, ${transition} transition from previous step`;
+          }
+  
+          console.error(`DEBUG - Generating step ${stepNumber}: ${stepPrompt}`);
+  
+          try {
+            const response = await this.ai.models.generateContent({
+              model: this.modelName,
+              contents: [
+                {
+                  role: 'user',
+                  parts: [{ text: stepPrompt }],
+                },
+              ],
+            });
+  
+            if (response.candidates && response.candidates[0]?.content?.parts) {
+              for (const part of response.candidates[0].content.parts) {
+                let imageBase64: string | undefined;
+  
+                if (part.inlineData?.data) {
+                  imageBase64 = part.inlineData.data;
+                } else if (part.text && this.isValidBase64ImageData(part.text)) {
+                  imageBase64 = part.text;
+                }
+  
+                if (imageBase64) {
+                  const filename = FileHandler.generateFilename(
+                    `${type}step${stepNumber}${request.prompt}`,
+                    'png', // Stories default to png
+                    0,
+                  );
+                  const fullPath = await FileHandler.saveImageFromBase64(
+                    imageBase64,
+                    outputPath,
+                    filename,
+                  );
+                  generatedFiles.push(fullPath);
+                  console.error(`DEBUG - Step ${stepNumber} saved to:`, fullPath);
+                  break;
+                }
               }
             }
+          } catch (error: unknown) {
+            const errorMessage = this.handleApiError(error);
+            if (!firstError) {
+              firstError = errorMessage;
+            }
+            console.error(
+              `DEBUG - Error generating step ${stepNumber}:`,
+              errorMessage,
+            );
+            if (errorMessage.toLowerCase().includes('authentication failed')) {
+              return {
+                success: false,
+                message: 'Story generation failed',
+                error: errorMessage,
+              };
+            }
           }
-        } catch (error: unknown) {
-          const errorMessage = this.handleApiError(error);
-          if (!firstError) {
-            firstError = errorMessage;
-          }
-          console.error(
-            `[Nano Banana] Error generating step ${stepNumber}:`,
-            errorMessage,
-          );
-          if (errorMessage.toLowerCase().includes('authentication failed')) {
-            return {
-              success: false,
-              message: 'Story generation failed',
-              error: errorMessage,
-            };
+  
+          // Check if this step was actually generated
+          if (generatedFiles.length < stepNumber) {
+            console.error(
+              `DEBUG - WARNING: Step ${stepNumber} failed to generate - no valid image data received`,
+            );
           }
         }
-
-        // Check if this step was actually generated
-        if (generatedFiles.length < stepNumber) {
-          console.error(
-            `[Nano Banana] WARNING: Step ${stepNumber} failed to generate - no valid image data received`,
-          );
+  
+        console.error(
+          `DEBUG - Story generation completed. Generated ${generatedFiles.length} out of ${steps} requested images`,
+        );
+  
+        if (generatedFiles.length === 0) {
+          return {
+            success: false,
+            message: 'Failed to generate any story sequence images',
+            error: firstError || 'No image data found in API responses',
+          };
         }
-      }
-
-      console.error(
-        `[Nano Banana] Story generation completed. Generated ${generatedFiles.length} out of ${steps} requested images`,
-      );
-
-      if (generatedFiles.length === 0) {
+  
+        // Handle preview if requested
+        await this.handlePreview(generatedFiles, request);
+  
+        const wasFullySuccessful = generatedFiles.length === steps;
+        const successMessage = wasFullySuccessful
+          ? `Successfully generated complete ${steps}-step ${type} sequence`
+          : `Generated ${generatedFiles.length} out of ${steps} requested ${type} steps (${steps - generatedFiles.length} steps failed)`;
+  
+        return {
+          success: true,
+          message: successMessage,
+          generatedFiles,
+        };
+      } catch (error: unknown) {
+        console.error('DEBUG - Error in generateStorySequence:', error);
         return {
           success: false,
-          message: 'Failed to generate any story sequence images',
-          error: firstError || 'No image data found in API responses',
+          message: `Failed to generate ${request.mode} sequence`,
+          error: this.handleApiError(error),
         };
       }
-
-      // Handle preview if requested
-      await this.handlePreview(generatedFiles, request);
-
-      const wasFullySuccessful = generatedFiles.length === steps;
-      const successMessage = wasFullySuccessful
-        ? `Successfully generated complete ${steps}-step ${type} sequence`
-        : `Generated ${generatedFiles.length} out of ${steps} requested ${type} steps (${steps - generatedFiles.length} steps failed)`;
-
-      return {
-        success: true,
-        message: successMessage,
-        generatedFiles,
-      };
-    } catch (error: unknown) {
-      console.error('[Nano Banana] Error in generateStorySequence:', error);
-      return {
-        success: false,
-        message: `Failed to generate ${request.mode} sequence`,
-        error: this.handleApiError(error),
-      };
     }
-  }
-
   async editImage(
     request: ImageGenerationRequest,
   ): Promise<ImageGenerationResponse> {
@@ -587,7 +585,7 @@ export class ImageGenerator {
       });
 
       console.error(
-        '[Nano Banana] Edit API Response structure:',
+        'DEBUG - Edit API Response structure:',
         JSON.stringify(response, null, 2),
       );
 
@@ -600,14 +598,14 @@ export class ImageGenerator {
 
           if (part.inlineData?.data) {
             resultImageBase64 = part.inlineData.data;
-            console.error('[Nano Banana] Found edited image in inlineData:', {
+            console.error('DEBUG - Found edited image in inlineData:', {
               length: resultImageBase64.length,
               mimeType: part.inlineData.mimeType,
             });
           } else if (part.text && this.isValidBase64ImageData(part.text)) {
             resultImageBase64 = part.text;
             console.error(
-              '[Nano Banana] Found edited image in text field (fallback)',
+              'DEBUG - Found edited image in text field (fallback)',
             );
           }
 
@@ -622,8 +620,8 @@ export class ImageGenerator {
               outputPath,
               filename,
             );
-            generatedFiles.push(fullPath);
-            console.error('[Nano Banana] Edited image saved to:', fullPath);
+generatedFiles.push(fullPath);
+            console.error('DEBUG - Edited image saved to:', fullPath);
             imageFound = true;
             break; // Only process the first valid image
           }
@@ -631,7 +629,7 @@ export class ImageGenerator {
 
         if (!imageFound) {
           console.error(
-            '[Nano Banana] No valid image data found in edit response parts',
+            'DEBUG - No valid image data found in edit response parts',
           );
         }
 
@@ -651,10 +649,95 @@ export class ImageGenerator {
         error: 'No image data in response',
       };
     } catch (error: unknown) {
-      console.error(`[Nano Banana] Error in ${request.mode}Image:`, error);
+      console.error(`DEBUG - Error in ${request.mode}Image:`, error);
       return {
         success: false,
         message: `Failed to ${request.mode} image`,
+        error: this.handleApiError(error),
+      };
+    }
+  }
+
+  async remixImage(
+    request: ImageGenerationRequest,
+  ): Promise<ImageGenerationResponse> {
+    try {
+      if (!request.inputImages || request.inputImages.length < 2) {
+        return {
+          success: false,
+          message: 'At least two input images are required for a remix.',
+          error: 'Missing or insufficient inputImages parameter',
+        };
+      }
+
+      const outputPath = FileHandler.ensureOutputDirectory();
+      const parts: ({ text: string } | { inlineData: { data: string, mimeType: string } })[] = [{ text: request.prompt }];
+
+      for (const imagePath of request.inputImages) {
+        const fileResult = FileHandler.findInputFile(imagePath);
+        if (!fileResult.found) {
+          return {
+            success: false,
+            message: `Input image not found: ${imagePath}`,
+            error: `Searched in: ${fileResult.searchedPaths.join(', ')}`,
+          };
+        }
+        const imageBase64 = await FileHandler.readImageAsBase64(fileResult.filePath!);
+        parts.push({
+          inlineData: {
+            data: imageBase64,
+            mimeType: 'image/png', // Assuming PNG, adjust if needed
+          },
+        });
+      }
+
+      const response = await this.ai.models.generateContent({
+        model: this.modelName,
+        contents: [{ role: 'user', parts }],
+      });
+
+      if (response.candidates && response.candidates[0]?.content?.parts) {
+        const generatedFiles: string[] = [];
+        for (const part of response.candidates[0].content.parts) {
+          let resultImageBase64: string | undefined;
+          if (part.inlineData?.data) {
+            resultImageBase64 = part.inlineData.data;
+          } else if (part.text && this.isValidBase64ImageData(part.text)) {
+            resultImageBase64 = part.text;
+          }
+
+          if (resultImageBase64) {
+            const filename = FileHandler.generateFilename(
+              `remix_${request.prompt}`,
+              'png',
+              0,
+            );
+            const fullPath = await FileHandler.saveImageFromBase64(
+              resultImageBase64,
+              outputPath,
+              filename,
+            );
+            generatedFiles.push(fullPath);
+            await this.handlePreview(generatedFiles, request);
+            return {
+              success: true,
+              message: 'Successfully remixed images.',
+              generatedFiles,
+            };
+          }
+        }
+      }
+
+      return {
+        success: false,
+        message: 'Failed to remix images.',
+        error: 'No image data in response from model.',
+      };
+    } catch (error: unknown) {
+      console.error('DEBUG - Error in remixImage:', error);
+      return {
+        success: false,
+        message: 'Failed to remix images.',
         error: this.handleApiError(error),
       };
     }
