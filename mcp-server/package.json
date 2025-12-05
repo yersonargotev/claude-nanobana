@@ -1,0 +1,36 @@
+{
+  "name": "claude-nanobanana-mcp-server",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "MCP server for Claude Code Nano Banana plugin - Advanced AI image generation and manipulation",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch",
+    "prepare": "npm run build",
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "dependencies": {
+    "@google/genai": "^1.17.0",
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "claude-code",
+    "mcp-server",
+    "image-generation",
+    "gemini",
+    "ai",
+    "nanobanana"
+  ],
+  "author": "Nano Banana Team",
+  "license": "Apache-2.0"
+}

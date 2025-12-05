@@ -1,0 +1,29 @@
+{
+  "mcpServers": {
+    "nanobanana": {
+      "command": "node",
+      "args": ["./mcp-server/dist/index.js"],
+      "env": {
+        "NANOBANANA_GEMINI_API_KEY": "${NANOBANANA_GEMINI_API_KEY}",
+        "GOOGLE_API_KEY": "${GOOGLE_API_KEY}",
+        "NANOBANANA_MODEL": "${NANOBANANA_MODEL:-gemini-2.5-flash-image}"
+      },
+      "timeout": 120000,
+      "maxRestartAttempts": 3
+    }
+  },
+  "tools": {
+    "included": [
+      "generate_image",
+      "edit_image",
+      "restore_image",
+      "generate_icon",
+      "generate_pattern",
+      "generate_story",
+      "generate_diagram"
+    ]
+  },
+  "resources": {
+    "included": ["nanobanana://*"]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "name": "claude-nanobanana",
+  "version": "1.0.0",
+  "description": "Claude Code plugin for advanced AI image generation and manipulation using Google Gemini models",
+  "author": "Nano Banana Team",
+  "license": "Apache-2.0",
+  "keywords": ["image-generation", "gemini", "ai", "claude-code", "image-editing", "image-restoration"],
+  "homepage": "https://github.com/nanobanana/claude-nanobanana",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nanobanana/claude-nanobanana.git"
+  },
+  "claude": {
+    "minVersion": "0.7.0",
+    "capabilities": [
+      "mcp-server",
+      "slash-commands",
+      "agent-skills",
+      "subagents"
+    ]
+  },
+  "components": {
+    "mcpServers": {
+      "nanobanana-mcp": "./mcp-server"
+    },
+    "slashCommands": {
+      "nanobanana": "./commands/nanobanana",
+      "generate": "./commands/generate",
+      "edit": "./commands/edit",
+      "restore": "./commands/restore",
+      "icon": "./commands/icon",
+      "pattern": "./commands/pattern",
+      "story": "./commands/story",
+      "diagram": "./commands/diagram"
+    },
+    "agentSkills": {
+      "image-generator": "./skills/image-generator",
+      "image-editor": "./skills/image-editor"
+    },
+    "subagents": {
+      "nanobanana-specialist": "./agents/nanobanana-specialist"
+    }
+  },
+  "dependencies": {
+    "@google/genai": "^0.15.0",
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "environment": {
+    "required": [
+      "NANOBANANA_GEMINI_API_KEY",
+      "GOOGLE_API_KEY"
+    ],
+    "optional": [
+      "NANOBANANA_MODEL"
+    ]
+  },
+  "runtime": {
+    "node": ">=18.0.0"
+  }
+}
