@@ -1,7 +1,7 @@
 ---
 name: image-generator
 description: Automatically generates images based on context and user needs without requiring explicit commands
-allowed-tools: generate_image, edit_image, restore_image, generate_icon, generate_pattern, generate_story, generate_diagram
+allowed-tools: generate_image, edit_image, restore_image, remix_image, generate_icon, generate_pattern, generate_story, generate_diagram
 ---
 
 # IMAGE_GENERATOR Skill
@@ -55,6 +55,13 @@ This skill activates automatically when you detect:
 - System architecture or processes mentioned
 - Data relationships or hierarchies need visualization
 - Flow or structure explanations would help
+
+### Use `remix_image` when:
+- User wants to combine elements from multiple images
+- Style transfer between images is discussed
+- Blending or fusion of visual concepts is mentioned
+- Creative compositions from multiple sources are needed
+- User has multiple reference images to merge
 
 ### Use `edit_image` when:
 - User mentions existing images that need modification
@@ -110,6 +117,9 @@ This skill activates automatically when you detect:
 
 **Scenario 3**: User explains a multi-step process
 → *Response*: "I can create a visual sequence showing these steps. Would a 4-step tutorial diagram be helpful?"
+
+**Scenario 4**: User has multiple reference images they want to combine
+→ *Response*: "I can remix these images together. Would you like me to blend the style of one with the content of the other, or create a fusion of elements from both?"
 
 ---
 *This skill uses Nano Banana's MCP tools to provide intelligent, context-aware image generation.*

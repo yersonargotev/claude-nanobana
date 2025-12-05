@@ -1,7 +1,7 @@
 ---
 name: image-editor
 description: Automatically detects image editing needs and intelligently enhances or modifies images
-allowed-tools: edit_image, restore_image, generate_image
+allowed-tools: edit_image, restore_image, remix_image, generate_image
 ---
 
 # IMAGE_EDITOR Skill
@@ -15,6 +15,8 @@ This skill activates automatically when you detect:
 - Before/after scenarios or comparison discussions
 - Style or aesthetic modification needs
 - Technical image quality concerns
+- Multiple images that need to be combined or remixed
+- Style transfer requests between images
 
 ## Capabilities
 - **Quality Analysis**: Automatically detect image quality issues and improvement opportunities
@@ -38,6 +40,13 @@ This skill activates automatically when you detect:
 - Historical or old photos need improvement
 - Scanner or digital capture issues are discussed
 - Color correction or enhancement needs are expressed
+
+### Use `remix_image` when:
+- User wants to combine elements from multiple existing images
+- Style from one image needs to be applied to another
+- Multiple reference images need to be merged into one
+- Creative fusion of different visual sources is requested
+- Collage or composite image creation is needed
 
 ### Use `generate_image` when:
 - Editing request is too complex for modification
@@ -140,6 +149,9 @@ This skill activates automatically when you detect:
 
 **Scenario 3**: User has inconsistent product images
 → *Response*: "I notice the product images have different styles and quality levels. I can help create a consistent look across all images while enhancing their professional appearance."
+
+**Scenario 4**: User wants to combine a portrait with a style reference
+→ *Response*: "I can remix your portrait with the style reference image to apply that artistic style. Would you like me to blend the style while preserving the portrait's likeness?"
 
 ---
 *This skill uses Nano Banana's MCP tools to provide intelligent, context-aware image editing and enhancement.*

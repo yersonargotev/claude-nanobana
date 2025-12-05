@@ -95,6 +95,12 @@ A comprehensive Claude Code plugin that brings the power of Google's Gemini AI m
 /restore "blurry-image.png" "increase sharpness and clarity"
 ```
 
+#### `/remix` - Image Remixing
+```bash
+/remix "photo1.jpg" "photo2.jpg" "blend these into a surreal landscape"
+/remix "face.png" "style-reference.jpg" "apply the style to the face" --preview
+```
+
 #### `/icon` - Icon Generation
 ```bash
 /icon "weather app with sun and clouds" --sizes=64,128,256,512 --style=modern
@@ -177,11 +183,12 @@ The plugin automatically searches for input images in:
 
 ### MCP Tools
 
-The plugin provides 7 MCP tools:
+The plugin provides 8 MCP tools:
 
 - `generate_image`: Core image generation with advanced options
 - `edit_image`: Image editing with file input
 - `restore_image`: Image restoration and enhancement
+- `remix_image`: Multi-image remixing and fusion
 - `generate_icon`: Specialized icon generation
 - `generate_pattern`: Pattern and texture creation
 - `generate_story`: Sequential image storytelling
@@ -201,6 +208,11 @@ The plugin provides 7 MCP tools:
 #### Image Editing
 - `prompt` (required): Edit instructions
 - `file` (required): Input image filename
+- `preview`: Auto-preview flag
+
+#### Image Remixing
+- `prompt` (required): Remix instructions
+- `files` (required): Array of input image filenames (minimum 2)
 - `preview`: Auto-preview flag
 
 ## Examples
@@ -224,6 +236,13 @@ The plugin provides 7 MCP tools:
 /generate "fantasy landscape with floating islands" --styles=watercolor,anime --count=4
 /story "character transformation sequence" --steps=6 --type=story --style=evolving
 /edit "concept-art.jpg" "add dramatic lighting and enhance colors"
+```
+
+### Image Remixing
+```bash
+/remix "photo1.jpg" "photo2.jpg" "blend into a dreamlike composition"
+/remix "portrait.png" "art-style.jpg" "apply the artistic style to the portrait"
+/remix "product.jpg" "background.png" "create a professional product shot" --preview
 ```
 
 ## Troubleshooting
