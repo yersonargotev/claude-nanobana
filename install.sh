@@ -70,11 +70,11 @@ install_dependencies() {
     fi
 
     # Install MCP server dependencies
-    if [ -d "mcp-server" ]; then
-        cd mcp-server
+    if [ -d "nanobanana/mcp-server" ]; then
+        cd nanobanana/mcp-server
         npm install
         npm run build
-        cd ..
+        cd ../..
     fi
 
     echo "✅ Dependencies installed"
@@ -84,8 +84,8 @@ install_dependencies() {
 install_plugin() {
     echo "🔌 Installing plugin in Claude Code..."
 
-    # Get current directory
-    PLUGIN_DIR=$(pwd)
+    # Get current directory and plugin path
+    PLUGIN_DIR="$(pwd)/nanobanana"
 
     # Install plugin
     if claude plugin install "$PLUGIN_DIR" 2>/dev/null; then
@@ -111,7 +111,7 @@ verify_installation() {
     fi
 
     # Test MCP server
-    if [ -f "mcp-server/dist/index.js" ]; then
+    if [ -f "nanobanana/mcp-server/dist/index.js" ]; then
         echo "✅ MCP server built successfully"
     else
         echo "❌ MCP server build failed"
@@ -149,7 +149,7 @@ main() {
     echo ""
 
     # Check if we're in the right directory
-    if [ ! -f ".claude-plugin/plugin.json" ]; then
+    if [ ! -f "nanobanana/.claude-plugin/plugin.json" ]; then
         echo "❌ Please run this script from the plugin root directory"
         exit 1
     fi

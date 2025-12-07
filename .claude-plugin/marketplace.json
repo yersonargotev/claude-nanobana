@@ -6,60 +6,23 @@
   },
   "metadata": {
     "description": "Advanced AI image generation and manipulation plugins for Claude Code",
-    "version": "1.0.0",
-    "pluginRoot": "./plugins"
+    "version": "1.0.0"
   },
   "plugins": [
     {
       "name": "claude-nanobanana",
-      "source": "./",
+      "source": "./nanobanana",
       "description": "Claude Code plugin for advanced AI image generation and manipulation using Google Gemini models",
       "version": "1.0.0",
-      "author": {
-        "name": "Nano Banana Team",
-        "email": "team@nanobanana.com"
-      },
-      "homepage": "https://github.com/nanobanana/claude-nanobanana",
-      "repository": "https://github.com/nanobanana/claude-nanobanana",
-      "license": "Apache-2.0",
+      "category": "media",
       "keywords": [
         "image-generation",
         "gemini",
         "ai",
         "claude-code",
         "image-editing",
-        "image-restoration",
-        "image-manipulation",
-        "google-ai"
-      ],
-      "category": "media",
-      "tags": [
-        "ai",
-        "images",
-        "generation",
-        "editing",
-        "restoration",
-        "icons",
-        "patterns",
-        "diagrams",
-        "stories"
-      ],
-      "mcpServers": "./.mcp.json",
-      "commands": [
-        "./commands/nanobanana.md",
-        "./commands/generate.md",
-        "./commands/edit.md",
-        "./commands/restore.md",
-        "./commands/remix.md",
-        "./commands/icon.md",
-        "./commands/pattern.md",
-        "./commands/story.md",
-        "./commands/diagram.md"
-      ],
-      "agents": [
-        "./agents/nanobanana-specialist.md"
-      ],
-      "strict": true
+        "image-restoration"
+      ]
     }
   ]
 }

@@ -10,11 +10,14 @@ This is the **Claude Nano Banana Plugin** - a comprehensive Claude Code plugin t
 
 The plugin is structured as a monorepo with the following key components:
 
-- **MCP Server** (`mcp-server/`): TypeScript-based server implementing 8 tools for image operations
-- **Slash Commands** (`commands/`): Natural language interfaces for different image operations
-- **Agent Skills** (`skills/`): Proactive image generation and editing capabilities
-- **Subagents** (`agents/`): Specialized agents for complex image tasks
-- **Plugin Configuration** (`.claude-plugin/`): Plugin metadata and component definitions
+- **Plugin Root** (`nanobanana/`): Contains all plugin components
+  - **MCP Server** (`nanobanana/mcp-server/`): TypeScript-based server implementing 8 tools for image operations
+  - **Slash Commands** (`nanobanana/commands/`): Natural language interfaces for different image operations
+  - **Agent Skills** (`nanobanana/skills/`): Proactive image generation and editing capabilities
+  - **Subagents** (`nanobanana/agents/`): Specialized agents for complex image tasks
+  - **Plugin Configuration** (`nanobanana/.claude-plugin/`): Plugin manifest (plugin.json)
+  - **MCP Configuration** (`nanobanana/.mcp.json`): MCP server definitions
+- **Marketplace Configuration** (`.claude-plugin/`): Marketplace metadata pointing to the plugin
 
 ## Development Commands
 
@@ -48,7 +51,7 @@ npm run lint
 ### MCP Server Specific
 ```bash
 # Work in MCP server directory
-cd mcp-server
+cd nanobanana/mcp-server
 
 # Build MCP server
 npm run build
@@ -62,7 +65,7 @@ npm run dev
 
 ## MCP Server Tools
 
-The plugin implements 8 MCP tools in `mcp-server/src/`:
+The plugin implements 8 MCP tools in `nanobanana/mcp-server/src/`:
 
 1. **generate_image**: Core image generation with style controls, variations, and batch generation
 2. **edit_image**: Natural language image editing with file input
@@ -107,7 +110,7 @@ Optional configuration:
 ## Plugin Components
 
 ### Slash Commands
-All commands are defined in `commands/` directory:
+All commands are defined in `nanobanana/commands/` directory:
 - `/nanobanana`: Natural language interface
 - `/generate`: Advanced generation with parameters
 - `/edit`, `/restore`, `/remix`: Image manipulation
@@ -124,23 +127,23 @@ Two skills provide proactive capabilities:
 ## Build Process
 
 The plugin uses TypeScript compilation:
-- Source: `mcp-server/src/`
-- Output: `mcp-server/dist/`
-- Main entry: `mcp-server/dist/index.js`
+- Source: `nanobanana/mcp-server/src/`
+- Output: `nanobanana/mcp-server/dist/`
+- Main entry: `nanobanana/mcp-server/dist/index.js`
 
 The MCP server must be built before the plugin can be used:
 ```bash
-cd mcp-server && npm install && npm run build
+cd nanobanana/mcp-server && npm install && npm run build
 ```
 
 ## Configuration Files
 
-- `.mcp.json`: MCP server configuration and tool definitions
-- `package.json`: Root package with plugin metadata and scripts
-- `mcp-server/package.json`: MCP server dependencies and build configuration
-- `tsconfig.json`: TypeScript compilation configuration
-- `.claude-plugin/plugin.json`: Plugin manifest and component definitions
-- `.claude-plugin/marketplace.json`: Marketplace configuration
+- `nanobanana/.mcp.json`: MCP server configuration and tool definitions
+- `nanobanana/.claude-plugin/plugin.json`: Plugin manifest and component definitions
+- `nanobanana/mcp-server/package.json`: MCP server dependencies and build configuration
+- `nanobanana/mcp-server/tsconfig.json`: TypeScript compilation configuration
+- `.claude-plugin/marketplace.json`: Marketplace configuration (repo level)
+- `package.json`: Root package with project scripts
 
 ## Testing Installation
 

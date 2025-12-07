@@ -56,7 +56,7 @@ A comprehensive Claude Code plugin that brings the power of Google's Gemini AI m
 
 3. **Build MCP Server**
    ```bash
-   cd claude-nanobanana-plugin/mcp-server
+   cd claude-nanobanana-plugin/nanobanana/mcp-server
    npm install
    npm run build
    ```
@@ -280,20 +280,22 @@ export NANOBANANA_DEBUG=true
 ```bash
 git clone https://github.com/nanobanana/claude-nanobanana-plugin
 cd claude-nanobanana-plugin
-cd mcp-server && npm install && npm run build
+cd nanobanana/mcp-server && npm install && npm run build
 ```
 
 ### Project Structure
 ```
 claude-nanobanana-plugin/
-├── .claude-plugin/          # Plugin manifest
-├── commands/                # Slash commands
-├── skills/                  # Agent skills
-├── agents/                  # Subagents
-├── mcp-server/             # MCP server implementation
-├── docs/                   # Documentation
-├── .mcp.json               # MCP configuration
-└── README.md               # This file
+├── nanobanana/              # Plugin root directory
+│   ├── .claude-plugin/      # Plugin manifest (plugin.json)
+│   ├── .mcp.json            # MCP server configuration
+│   ├── commands/            # Slash commands
+│   ├── agents/              # Subagents
+│   ├── skills/              # Agent skills
+│   └── mcp-server/          # MCP server implementation
+├── .claude-plugin/          # Marketplace configuration
+├── docs/                    # Documentation
+└── README.md                # This file
 ```
 
 ## Contributing
