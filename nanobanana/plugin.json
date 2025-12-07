@@ -1,0 +1,27 @@
+{
+  "name": "claude-nanobanana",
+  "version": "1.0.0",
+  "description": "Claude Code plugin for advanced AI image generation and manipulation using Google Gemini models",
+  "author": {
+    "name": "Nano Banana Team"
+  },
+  "license": "Apache-2.0",
+  "keywords": ["image-generation", "gemini", "ai", "claude-code", "image-editing", "image-restoration"],
+  "homepage": "https://github.com/nanobanana/claude-nanobanana",
+  "repository": "https://github.com/nanobanana/claude-nanobanana",
+  "mcpServers": "./.mcp.json",
+  "commands": [
+    "./commands/nanobanana.md",
+    "./commands/generate.md",
+    "./commands/edit.md",
+    "./commands/restore.md",
+    "./commands/remix.md",
+    "./commands/icon.md",
+    "./commands/pattern.md",
+    "./commands/story.md",
+    "./commands/diagram.md"
+  ],
+  "agents": "./agents/nanobanana-specialist.md",
+  "skills": "./skills/"
+}
+
