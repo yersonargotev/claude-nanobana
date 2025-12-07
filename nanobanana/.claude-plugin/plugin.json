@@ -9,18 +9,18 @@
   "keywords": ["image-generation", "gemini", "ai", "claude-code", "image-editing", "image-restoration"],
   "homepage": "https://github.com/nanobanana/claude-nanobanana",
   "repository": "https://github.com/nanobanana/claude-nanobanana",
-  "mcpServers": "../.mcp.json",
+  "mcpServers": "./.mcp.json",
   "commands": [
-    "../commands/nanobanana.md",
-    "../commands/generate.md",
-    "../commands/edit.md",
-    "../commands/restore.md",
-    "../commands/remix.md",
-    "../commands/icon.md",
-    "../commands/pattern.md",
-    "../commands/story.md",
-    "../commands/diagram.md"
+    "./commands/nanobanana.md",
+    "./commands/generate.md",
+    "./commands/edit.md",
+    "./commands/restore.md",
+    "./commands/remix.md",
+    "./commands/icon.md",
+    "./commands/pattern.md",
+    "./commands/story.md",
+    "./commands/diagram.md"
   ],
-  "agents": "../agents/",
-  "skills": "../skills/"
+  "agents": "./agents/nanobanana-specialist.md",
+  "skills": "./skills/"
 }
