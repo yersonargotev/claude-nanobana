@@ -20,10 +20,7 @@
         "email": "team@nanobanana.com"
       },
       "homepage": "https://github.com/nanobanana/claude-nanobanana",
-      "repository": {
-        "type": "git",
-        "url": "https://github.com/nanobanana/claude-nanobanana.git"
-      },
+      "repository": "https://github.com/nanobanana/claude-nanobanana.git",
       "license": "Apache-2.0",
       "keywords": [
         "image-generation",
@@ -47,7 +44,7 @@
         "diagrams",
         "stories"
       ],
-      "mcpServers": "./mcp-server",
+      "mcpServers": "./mcp-server/mcp-server.json",
       "commands": [
         "./commands/nanobanana",
         "./commands/generate",
@@ -58,7 +55,9 @@
         "./commands/story",
         "./commands/diagram"
       ],
-      "agents": "./agents",
+      "agents": [
+        "./agents/nanobanana-specialist.md"
+      ],
       "strict": true
     }
   ]
