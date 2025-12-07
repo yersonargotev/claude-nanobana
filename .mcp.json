@@ -17,6 +17,7 @@
       "generate_image",
       "edit_image",
       "restore_image",
+      "remix_image",
       "generate_icon",
       "generate_pattern",
       "generate_story",
