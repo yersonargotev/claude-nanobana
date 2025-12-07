@@ -2,7 +2,7 @@
   "mcpServers": {
     "nanobanana": {
       "command": "node",
-      "args": ["./mcp-server/dist/index.js"],
+      "args": ["${CLAUDE_PLUGIN_ROOT}/mcp-server/dist/index.js"],
       "env": {
         "NANOBANANA_GEMINI_API_KEY": "${NANOBANANA_GEMINI_API_KEY}",
         "GOOGLE_API_KEY": "${GOOGLE_API_KEY}",
